@@ -9,6 +9,7 @@ root_dir = getenv("EXTENDED_HISTORY_FILES_DIR")
 
 
 def get_json_data():
+    json_data = []
     files = [
         "Streaming_History_Audio_2013-2019_0.json",
         "Streaming_History_Audio_2019_1.json",
@@ -22,6 +23,12 @@ def get_json_data():
 
     for json_file in files:
         with open(f"{root_dir}{json_file}") as f:
-            json_data = json.load(f)
+            new_data = json.load(f)
+            json_data.extend(new_data)
 
     return json_data
+
+
+if __name__ == "__main__":
+    d = get_json_data()
+    print(len(d))
