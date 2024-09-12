@@ -1,34 +1,8 @@
-import json
-from os import getenv
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from dotenv import load_dotenv
 
-load_dotenv()
-
-root_dir = getenv("EXTENDED_HISTORY_FILES_DIR")
-
-
-def get_json_data():
-    files = [
-        "Streaming_History_Audio_2013-2019_0.json",
-        "Streaming_History_Audio_2019_1.json",
-        "Streaming_History_Audio_2019-2020_2.json",
-        "Streaming_History_Audio_2020-2021_3.json",
-        "Streaming_History_Audio_2021_4.json",
-        "Streaming_History_Audio_2021-2023_5.json",
-        "Streaming_History_Audio_2023-2024_6.json",
-        # "Streaming_History_Video_2016-2024.json",
-    ]
-
-    for json_file in files:
-        with open(f"{root_dir}{json_file}") as f:
-            json_data = json.load(f)
-
-    return json_data
-
+from get_json import get_json_data
 
 if __name__ == "__main__":
     df = pd.DataFrame(get_json_data())
@@ -42,7 +16,7 @@ if __name__ == "__main__":
 
     # Set the time window for resampling (e.g., 30min)
     window = "12H"
-    decay_rate = 10
+    decay_rate = 300
 
     # Count plays per song
     play_counts = df["master_metadata_track_name"].value_counts()
@@ -81,7 +55,7 @@ if __name__ == "__main__":
         # Filter the DataFrame for the current song
         song_df = filtered_df[filtered_df["master_metadata_track_name"] == song]
         print(song_df["master_metadata_album_artist_name"])
-
+        print(song_df["master_metadata_track_name"])
         # Group by song track name and resample by the defined time window, counting plays
         power = (
             song_df.set_index("ts")
