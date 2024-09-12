@@ -20,16 +20,22 @@ files = [
 
 
 total_time = 0
+song_plays = {}
 artists = {}
 
 for json_file in files:
-    # print(json_file)
     with open(f"{root_dir}{json_file}") as f:
         d: dict[dict] = json.load(f)
         for song in d:
             ms = song.get("ms_played")
             total_time += ms
+
+            title = song.get("master_metadata_track_name")
             artist = song.get("master_metadata_album_artist_name")
+            if f"{title}\t {artist}" not in song_plays.keys():
+                song_plays[f"{title}\t {artist}"] = 1
+            else:
+                song_plays[f"{title}\t {artist}"] += 1
             if not artist:
                 artist = song.get("episode_show_name")
             if artist == None:
@@ -60,6 +66,8 @@ days = int(hours / 24)
 print(f"hours: {hours}")
 print(f"days: {days}")
 
-sorted = dict(sorted(artists.items(), key=lambda item: item[1]))
+sorted_artists = dict(sorted(artists.items(), key=lambda item: item[1]))
 
-print(sorted)
+sorted_titles = dict(sorted(song_plays.items(), key=lambda item: item[1]))
+
+print(sorted_titles)

@@ -42,6 +42,7 @@ if __name__ == "__main__":
 
     # Set the time window for resampling (e.g., 30min)
     window = "12H"
+    decay_rate = 10
 
     # Count plays per song
     play_counts = df["master_metadata_track_name"].value_counts()
@@ -64,18 +65,19 @@ if __name__ == "__main__":
         weights = np.exp(-time_diffs / decay_rate)
 
         # Sum the weighted values to get the "power" for the song
-        return weights.sum()
+        power = weights.sum()
+        return power
 
     # Compute the power for each song
     song_powers = {}
     for song in songs_with_enough_plays:
         song_df = filtered_df[filtered_df["master_metadata_track_name"] == song]
-        song_powers[song] = calculate_weighted_power(song_df, window)
+        song_powers[song] = calculate_weighted_power(song_df, decay_rate)
 
     # Sort songs by power in descending order
     sorted_songs = sorted(song_powers, key=song_powers.get, reverse=True)
 
-    for song in songs_with_enough_plays:
+    for song in sorted_songs:
         # Filter the DataFrame for the current song
         song_df = filtered_df[filtered_df["master_metadata_track_name"] == song]
         print(song_df["master_metadata_album_artist_name"])
