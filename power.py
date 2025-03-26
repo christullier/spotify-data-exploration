@@ -30,6 +30,32 @@ def calculate_weighted_power(song_df, decay_rate=300):
     return power
 
 
+def visualize_song_plays_over_time(df, song_name, window="1D"):
+    """
+    Create a time series plot for plays of a specific song
+
+    Parameters:
+    - df: DataFrame containing song play data
+    - song_name: Name of the song to visualize
+    - window: Resampling window (default is daily)
+    """
+    # Filter for the specific song
+    song_df = df[df["master_metadata_track_name"] == song_name].copy()
+
+    # Set timestamp as index and resample
+    song_plays = song_df.set_index("ts").resample(window).size()
+
+    # Create the plot
+    plt.figure(figsize=(12, 6))
+    song_plays.plot(kind="bar", color="skyblue", edgecolor="black")
+    plt.title(f"Plays Over Time for '{song_name}'")
+    plt.xlabel("Time")
+    plt.ylabel("Number of Plays")
+    plt.xticks(rotation=45, ha="right")
+    plt.tight_layout()
+    plt.show()
+
+
 def analyze_song_power(df, decay_rate=300, min_plays=5):
     # Convert the 'timestamp' column to datetime
     df["ts"] = pd.to_datetime(df["ts"])
@@ -56,6 +82,8 @@ def analyze_song_power(df, decay_rate=300, min_plays=5):
             "power": calculate_weighted_power(song_df, decay_rate),
             "artist": song_df["master_metadata_album_artist_name"].iloc[0],
             "total_plays": len(song_df),
+            "first_play": song_df["ts"].min(),
+            "last_play": song_df["ts"].max(),
         }
 
     # Sort songs by power in descending order
@@ -71,9 +99,11 @@ def analyze_song_power(df, decay_rate=300, min_plays=5):
         print(f"Artist: {details['artist']}")
         print(f"Power Score: {details['power']:.2f}")
         print(f"Total Plays: {details['total_plays']}")
+        print(f"First Played: {details['first_play']}")
+        print(f"Last Played: {details['last_play']}")
         print("---")
 
-    return song_powers, sorted_songs
+    return song_powers, sorted_songs, df
 
 
 if __name__ == "__main__":
@@ -81,9 +111,9 @@ if __name__ == "__main__":
     df = pd.DataFrame(get_spotify())
 
     # Analyze song power
-    song_powers, sorted_songs = analyze_song_power(df)
+    song_powers, sorted_songs, full_df = analyze_song_power(df)
 
-    # Optional: Visualization (you can customize this further)
+    # Visualization of top songs by power score
     plt.figure(figsize=(12, 6))
     powers = [song_powers[song]["power"] for song in sorted_songs[:20]]
     plt.bar(sorted_songs[:20], powers)
@@ -93,3 +123,7 @@ if __name__ == "__main__":
     plt.xticks(rotation=90)
     plt.tight_layout()
     plt.show()
+
+    # # Optional: Visualize plays over time for top songs
+    # for song in sorted_songs[:15]:  # Visualize top 5 songs
+    #     visualize_song_plays_over_time(full_df, song)
