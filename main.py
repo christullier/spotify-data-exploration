@@ -1,10 +1,10 @@
-from get_json import get_json_data
+from get_data import get_spotify
 
 total_time = 0
 song_plays = {}
 artists = {}
 
-for song in get_json_data():
+for song in get_spotify():
     ms = song.get("ms_played")
     total_time += ms
 

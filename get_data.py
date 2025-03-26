@@ -1,7 +1,8 @@
 import json
 from os import getenv
-
+import csv
 from dotenv import load_dotenv
+import pandas as pd
 
 load_dotenv()
 
@@ -21,17 +22,14 @@ def read_json(file_names):
 
 
 def read_csv(file_names):
-    csv_data = []
-    for json_file in file_names:
-        print(f"{json_file=}")
-        with open(json_file) as f:
-            new_data = f.readlines()
-            csv_data.extend(new_data)
-
-    return csv_data
+    # csv_data = []
+    for csv_filename in file_names:
+        df = pd.read_csv(csv_filename)
+        # csv_data.extend(df)
+    return df
 
 
-def get_spotify_json():
+def get_spotify():
     files = [
         "Streaming_History_Audio_2013-2019_0.json",
         "Streaming_History_Audio_2019_1.json",
@@ -49,17 +47,13 @@ def get_spotify_json():
     return json_data
 
 
-def get_apple_json():
-    json_data = []
-    files = [
-        "Apple Music Play Activity.csv",
-    ]
-    file_paths = [f"{APPLE_DIR}/{file}" for file in files]
-    json_data = read_csv(file_paths)
-    return json_data
+def apple_fp() -> str:
+    file = "Apple Music Play Activity.csv"
+    file_path = f"{APPLE_DIR}/{file}"
+    return file_path
 
 
 if __name__ == "__main__":
     # d = get_spotify_json()
-    d = get_apple_json()
+    d = get_apple()
     print(len(d))

@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from get_json import get_json_data
+from get_data import get_spotify
 
 if __name__ == "__main__":
-    df = pd.DataFrame(get_json_data())
+    df = pd.DataFrame(get_spotify())
 
     # Convert the 'timestamp' column to datetime
     df["ts"] = pd.to_datetime(df["ts"])

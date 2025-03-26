@@ -1,8 +1,8 @@
 # getting a gauge on how much data is missing
 # i thought some of the podcasts were missing at one point
-from get_json import get_json_data
+from get_data import get_spotify
 
-data = get_json_data()
+data = get_spotify()
 import os
 
 missing_dates: dict[str, int] = {}
