@@ -42,13 +42,16 @@ def visualize_song_plays_over_time(df, song_name, window="1D"):
     # Filter for the specific song
     song_df = df[df["master_metadata_track_name"] == song_name].copy()
 
+    # Get the artist name (taking the first one if multiple entries exist)
+    artist_name = song_df["master_metadata_album_artist_name"].iloc[0]
+
     # Set timestamp as index and resample
     song_plays = song_df.set_index("ts").resample(window).size()
 
     # Create the plot
     plt.figure(figsize=(12, 6))
     ax = song_plays.plot(kind="bar", color="skyblue", edgecolor="black")
-    plt.title(f"Plays Over Time for '{song_name}'")
+    plt.title(f"Plays Over Time for '{song_name}' by {artist_name}")
     plt.xlabel("Time")
     plt.ylabel("Number of Plays")
 
