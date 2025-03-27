@@ -47,11 +47,16 @@ def visualize_song_plays_over_time(df, song_name, window="1D"):
 
     # Create the plot
     plt.figure(figsize=(12, 6))
-    song_plays.plot(kind="bar", color="skyblue", edgecolor="black")
+    ax = song_plays.plot(kind="bar", color="skyblue", edgecolor="black")
     plt.title(f"Plays Over Time for '{song_name}'")
     plt.xlabel("Time")
     plt.ylabel("Number of Plays")
+
+    # Show only every nth label to prevent overcrowding
+    n = max(len(ax.get_xticklabels()) // 10, 1)  # Show ~10 labels
+    [l.set_visible(False) for (i, l) in enumerate(ax.get_xticklabels()) if i % n != 0]
     plt.xticks(rotation=45, ha="right")
+
     plt.tight_layout()
     plt.show()
 
@@ -113,17 +118,17 @@ if __name__ == "__main__":
     # Analyze song power
     song_powers, sorted_songs, full_df = analyze_song_power(df)
 
-    # Visualization of top songs by power score
-    plt.figure(figsize=(12, 6))
-    powers = [song_powers[song]["power"] for song in sorted_songs[:20]]
-    plt.bar(sorted_songs[:20], powers)
-    plt.title("Top 20 Songs by Power Score")
-    plt.xlabel("Songs")
-    plt.ylabel("Power Score")
-    plt.xticks(rotation=90)
-    plt.tight_layout()
-    plt.show()
+    # # Visualization of top songs by power score
+    # plt.figure(figsize=(12, 6))
+    # powers = [song_powers[song]["power"] for song in sorted_songs[:20]]
+    # plt.bar(sorted_songs[:20], powers)
+    # plt.title("Top 20 Songs by Power Score")
+    # plt.xlabel("Songs")
+    # plt.ylabel("Power Score")
+    # plt.xticks(rotation=90)
+    # plt.tight_layout()
+    # plt.show()
 
-    # # Optional: Visualize plays over time for top songs
-    # for song in sorted_songs[:15]:  # Visualize top 5 songs
-    #     visualize_song_plays_over_time(full_df, song)
+    # Optional: Visualize plays over time for top songs
+    for song in sorted_songs[:15]:  # Visualize top 5 songs
+        visualize_song_plays_over_time(full_df, song)
