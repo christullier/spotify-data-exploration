@@ -54,6 +54,10 @@ def visualize_song_plays_over_time(df, song_name, window="1D"):
 
     # Show only every nth label to prevent overcrowding
     n = max(len(ax.get_xticklabels()) // 10, 1)  # Show ~10 labels
+    labels = [item.get_text() for item in ax.get_xticklabels()]
+    # Convert to just date format (YYYY-MM-DD)
+    labels = [label.split(" ")[0] for label in labels]
+    ax.set_xticklabels(labels)
     [l.set_visible(False) for (i, l) in enumerate(ax.get_xticklabels()) if i % n != 0]
     plt.xticks(rotation=45, ha="right")
 
