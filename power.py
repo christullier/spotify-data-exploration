@@ -125,16 +125,16 @@ if __name__ == "__main__":
     # Analyze song power
     song_powers, sorted_songs, full_df = analyze_song_power(df)
 
-    # # Visualization of top songs by power score
-    # plt.figure(figsize=(12, 6))
-    # powers = [song_powers[song]["power"] for song in sorted_songs[:20]]
-    # plt.bar(sorted_songs[:20], powers)
-    # plt.title("Top 20 Songs by Power Score")
-    # plt.xlabel("Songs")
-    # plt.ylabel("Power Score")
-    # plt.xticks(rotation=90)
-    # plt.tight_layout()
-    # plt.show()
+    # Visualization of top songs by power score
+    plt.figure(figsize=(12, 6))
+    powers = [song_powers[song]["power"] for song in sorted_songs[:20]]
+    plt.bar(sorted_songs[:20], powers)
+    plt.title("Top 20 Songs by Power Score")
+    plt.xlabel("Songs")
+    plt.ylabel("Power Score")
+    plt.xticks(rotation=90)
+    plt.tight_layout()
+    plt.show()
 
     # Optional: Visualize plays over time for top songs
     for song in sorted_songs[:15]:  # Visualize top 5 songs
