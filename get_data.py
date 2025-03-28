@@ -1,8 +1,9 @@
+import glob
 import json
-from os import getenv
-import csv
-from dotenv import load_dotenv
+from os import getenv, path
+
 import pandas as pd
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -30,18 +31,10 @@ def read_csv(file_names):
 
 
 def get_spotify():
-    files = [
-        "Streaming_History_Audio_2013-2019_0.json",
-        "Streaming_History_Audio_2019_1.json",
-        "Streaming_History_Audio_2019-2020_2.json",
-        "Streaming_History_Audio_2020-2021_3.json",
-        "Streaming_History_Audio_2021_4.json",
-        "Streaming_History_Audio_2021-2023_5.json",
-        "Streaming_History_Audio_2023-2024_6.json",
-        # "Streaming_History_Video_2016-2024.json",
-    ]
 
-    file_paths = [f"{SPOTIFY_DIR}/{file}" for file in files]
+    # Get all Streaming_History_Audio_*.json files from SPOTIFY_DIR
+    files = glob.glob(path.join(SPOTIFY_DIR, "Streaming_History_Audio_*.json"))
+    file_paths = files
 
     json_data = read_json(file_paths)
     return json_data
@@ -54,6 +47,6 @@ def apple_fp() -> str:
 
 
 if __name__ == "__main__":
-    # d = get_spotify_json()
-    d = get_apple()
+    d = get_spotify()
+    # d = get_apple()
     print(len(d))
