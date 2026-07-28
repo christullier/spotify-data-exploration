@@ -1,11 +1,11 @@
-import pandas as pd
-from get_data import apple_fp
 import matplotlib.pyplot as plt
+import pandas as pd
 
+from get_data import apple_fp
 
 file_path = apple_fp()
 
-df = pd.read_csv(file_path, low_memory=False)
+df = pd.read_csv(file_path, low_memory=False, escapechar="\\")
 
 
 # todo just edit the csv?
